@@ -1,7 +1,11 @@
 # glad
 
-- OpenGL 4.6 Core profile
 - CMake ready
+
+## OpenGL
+
+- OpenGL 4.5 Core profile
+- GL_ARB_bindless_texture
 
 ## wgl extenstions
 
