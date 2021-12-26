@@ -31,6 +31,7 @@ int GLAD_VK_KHR_dedicated_allocation = 0;
 int GLAD_VK_KHR_device_group = 0;
 int GLAD_VK_KHR_dynamic_rendering = 0;
 int GLAD_VK_KHR_get_physical_device_properties2 = 0;
+int GLAD_VK_KHR_push_descriptor = 0;
 int GLAD_VK_KHR_surface = 0;
 int GLAD_VK_KHR_swapchain = 0;
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
@@ -93,6 +94,8 @@ PFN_vkCmdNextSubpass glad_vkCmdNextSubpass = NULL;
 PFN_vkCmdNextSubpass2 glad_vkCmdNextSubpass2 = NULL;
 PFN_vkCmdPipelineBarrier glad_vkCmdPipelineBarrier = NULL;
 PFN_vkCmdPushConstants glad_vkCmdPushConstants = NULL;
+PFN_vkCmdPushDescriptorSetKHR glad_vkCmdPushDescriptorSetKHR = NULL;
+PFN_vkCmdPushDescriptorSetWithTemplateKHR glad_vkCmdPushDescriptorSetWithTemplateKHR = NULL;
 PFN_vkCmdResetEvent glad_vkCmdResetEvent = NULL;
 PFN_vkCmdResetQueryPool glad_vkCmdResetQueryPool = NULL;
 PFN_vkCmdResolveImage glad_vkCmdResolveImage = NULL;
@@ -532,6 +535,11 @@ static void glad_vk_load_VK_KHR_get_physical_device_properties2( GLADuserptrload
     glad_vkGetPhysicalDeviceQueueFamilyProperties2KHR = (PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR) load(userptr, "vkGetPhysicalDeviceQueueFamilyProperties2KHR");
     glad_vkGetPhysicalDeviceSparseImageFormatProperties2KHR = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR) load(userptr, "vkGetPhysicalDeviceSparseImageFormatProperties2KHR");
 }
+static void glad_vk_load_VK_KHR_push_descriptor( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_VK_KHR_push_descriptor) return;
+    glad_vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR) load(userptr, "vkCmdPushDescriptorSetKHR");
+    glad_vkCmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR) load(userptr, "vkCmdPushDescriptorSetWithTemplateKHR");
+}
 static void glad_vk_load_VK_KHR_surface( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_VK_KHR_surface) return;
     glad_vkDestroySurfaceKHR = (PFN_vkDestroySurfaceKHR) load(userptr, "vkDestroySurfaceKHR");
@@ -698,6 +706,7 @@ static int glad_vk_find_extensions_vulkan( VkPhysicalDevice physical_device) {
     GLAD_VK_KHR_device_group = glad_vk_has_extension("VK_KHR_device_group", extension_count, extensions);
     GLAD_VK_KHR_dynamic_rendering = glad_vk_has_extension("VK_KHR_dynamic_rendering", extension_count, extensions);
     GLAD_VK_KHR_get_physical_device_properties2 = glad_vk_has_extension("VK_KHR_get_physical_device_properties2", extension_count, extensions);
+    GLAD_VK_KHR_push_descriptor = glad_vk_has_extension("VK_KHR_push_descriptor", extension_count, extensions);
     GLAD_VK_KHR_surface = glad_vk_has_extension("VK_KHR_surface", extension_count, extensions);
     GLAD_VK_KHR_swapchain = glad_vk_has_extension("VK_KHR_swapchain", extension_count, extensions);
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
@@ -767,6 +776,7 @@ int gladLoadVulkanUserPtr( VkPhysicalDevice physical_device, GLADuserptrloadfunc
     glad_vk_load_VK_KHR_device_group(load, userptr);
     glad_vk_load_VK_KHR_dynamic_rendering(load, userptr);
     glad_vk_load_VK_KHR_get_physical_device_properties2(load, userptr);
+    glad_vk_load_VK_KHR_push_descriptor(load, userptr);
     glad_vk_load_VK_KHR_surface(load, userptr);
     glad_vk_load_VK_KHR_swapchain(load, userptr);
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
@@ -911,6 +921,8 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkCmdNextSubpass2",
     "vkCmdPipelineBarrier",
     "vkCmdPushConstants",
+    "vkCmdPushDescriptorSetKHR",
+    "vkCmdPushDescriptorSetWithTemplateKHR",
     "vkCmdResetEvent",
     "vkCmdResetQueryPool",
     "vkCmdResolveImage",

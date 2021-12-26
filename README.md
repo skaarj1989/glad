@@ -14,5 +14,6 @@
 - VK_KHR_win32_surface
 - VK_KHR_swapchain
 - VK_KHR_get_physical_device_properties2
+- VK_KHR_push_descriptor
 - VK_EXT_extended_dynamic_state
 - VK_KHR_dynamic_rendering
