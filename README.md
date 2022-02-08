@@ -1,7 +1,7 @@
 # glad
 
 - CMake ready
-- OpenGL 4.5 Core profile
+- OpenGL 4.6 Core profile
 
 ## Extensions
 
