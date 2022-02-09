@@ -28,7 +28,6 @@ add_library(glad src/gl.c $<IF:${WIN32}, src/wgl.c, src/glx.c >)
 target_include_directories(
   glad
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_link_libraries(glad PUBLIC OpenGL::GL)
 
