@@ -25,11 +25,12 @@ endif()
 find_package(Vulkan REQUIRED 1.2.170)
 
 add_library(glad src/vulkan.c)
+if(WIN32)
+  target_compile_definitions(VkFramework glad "VK_USE_PLATFORM_WIN32_KHR")
+endif()
 target_include_directories(
-  glad
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+  glad PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+              $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_link_libraries(glad PUBLIC Vulkan::Vulkan)
 
 add_library(glad::glad ALIAS glad)
