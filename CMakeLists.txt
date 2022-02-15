@@ -26,7 +26,7 @@ find_package(Vulkan REQUIRED 1.2.170)
 
 add_library(glad src/vulkan.c)
 if(WIN32)
-  target_compile_definitions(VkFramework glad "VK_USE_PLATFORM_WIN32_KHR")
+  target_compile_definitions(glad PUBLIC "VK_USE_PLATFORM_WIN32_KHR")
 endif()
 target_include_directories(
   glad PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
