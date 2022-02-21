@@ -27,6 +27,7 @@ int GLAD_VK_EXT_calibrated_timestamps = 0;
 int GLAD_VK_EXT_debug_utils = 0;
 int GLAD_VK_EXT_extended_dynamic_state = 0;
 int GLAD_VK_KHR_bind_memory2 = 0;
+int GLAD_VK_KHR_buffer_device_address = 0;
 int GLAD_VK_KHR_dedicated_allocation = 0;
 int GLAD_VK_KHR_device_group = 0;
 int GLAD_VK_KHR_dynamic_rendering = 0;
@@ -195,10 +196,12 @@ PFN_vkFreeCommandBuffers glad_vkFreeCommandBuffers = NULL;
 PFN_vkFreeDescriptorSets glad_vkFreeDescriptorSets = NULL;
 PFN_vkFreeMemory glad_vkFreeMemory = NULL;
 PFN_vkGetBufferDeviceAddress glad_vkGetBufferDeviceAddress = NULL;
+PFN_vkGetBufferDeviceAddressKHR glad_vkGetBufferDeviceAddressKHR = NULL;
 PFN_vkGetBufferMemoryRequirements glad_vkGetBufferMemoryRequirements = NULL;
 PFN_vkGetBufferMemoryRequirements2 glad_vkGetBufferMemoryRequirements2 = NULL;
 PFN_vkGetBufferMemoryRequirements2KHR glad_vkGetBufferMemoryRequirements2KHR = NULL;
 PFN_vkGetBufferOpaqueCaptureAddress glad_vkGetBufferOpaqueCaptureAddress = NULL;
+PFN_vkGetBufferOpaqueCaptureAddressKHR glad_vkGetBufferOpaqueCaptureAddressKHR = NULL;
 PFN_vkGetCalibratedTimestampsEXT glad_vkGetCalibratedTimestampsEXT = NULL;
 PFN_vkGetDescriptorSetLayoutSupport glad_vkGetDescriptorSetLayoutSupport = NULL;
 PFN_vkGetDeviceGroupPeerMemoryFeatures glad_vkGetDeviceGroupPeerMemoryFeatures = NULL;
@@ -207,6 +210,7 @@ PFN_vkGetDeviceGroupPresentCapabilitiesKHR glad_vkGetDeviceGroupPresentCapabilit
 PFN_vkGetDeviceGroupSurfacePresentModesKHR glad_vkGetDeviceGroupSurfacePresentModesKHR = NULL;
 PFN_vkGetDeviceMemoryCommitment glad_vkGetDeviceMemoryCommitment = NULL;
 PFN_vkGetDeviceMemoryOpaqueCaptureAddress glad_vkGetDeviceMemoryOpaqueCaptureAddress = NULL;
+PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR glad_vkGetDeviceMemoryOpaqueCaptureAddressKHR = NULL;
 PFN_vkGetDeviceProcAddr glad_vkGetDeviceProcAddr = NULL;
 PFN_vkGetDeviceQueue glad_vkGetDeviceQueue = NULL;
 PFN_vkGetDeviceQueue2 glad_vkGetDeviceQueue2 = NULL;
@@ -514,6 +518,12 @@ static void glad_vk_load_VK_KHR_bind_memory2( GLADuserptrloadfunc load, void* us
     glad_vkBindBufferMemory2KHR = (PFN_vkBindBufferMemory2KHR) load(userptr, "vkBindBufferMemory2KHR");
     glad_vkBindImageMemory2KHR = (PFN_vkBindImageMemory2KHR) load(userptr, "vkBindImageMemory2KHR");
 }
+static void glad_vk_load_VK_KHR_buffer_device_address( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_VK_KHR_buffer_device_address) return;
+    glad_vkGetBufferDeviceAddressKHR = (PFN_vkGetBufferDeviceAddressKHR) load(userptr, "vkGetBufferDeviceAddressKHR");
+    glad_vkGetBufferOpaqueCaptureAddressKHR = (PFN_vkGetBufferOpaqueCaptureAddressKHR) load(userptr, "vkGetBufferOpaqueCaptureAddressKHR");
+    glad_vkGetDeviceMemoryOpaqueCaptureAddressKHR = (PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR) load(userptr, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
+}
 static void glad_vk_load_VK_KHR_device_group( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_VK_KHR_device_group) return;
     glad_vkAcquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR) load(userptr, "vkAcquireNextImage2KHR");
@@ -712,6 +722,7 @@ static int glad_vk_find_extensions_vulkan( VkPhysicalDevice physical_device) {
     GLAD_VK_EXT_debug_utils = glad_vk_has_extension("VK_EXT_debug_utils", extension_count, extensions);
     GLAD_VK_EXT_extended_dynamic_state = glad_vk_has_extension("VK_EXT_extended_dynamic_state", extension_count, extensions);
     GLAD_VK_KHR_bind_memory2 = glad_vk_has_extension("VK_KHR_bind_memory2", extension_count, extensions);
+    GLAD_VK_KHR_buffer_device_address = glad_vk_has_extension("VK_KHR_buffer_device_address", extension_count, extensions);
     GLAD_VK_KHR_dedicated_allocation = glad_vk_has_extension("VK_KHR_dedicated_allocation", extension_count, extensions);
     GLAD_VK_KHR_device_group = glad_vk_has_extension("VK_KHR_device_group", extension_count, extensions);
     GLAD_VK_KHR_dynamic_rendering = glad_vk_has_extension("VK_KHR_dynamic_rendering", extension_count, extensions);
@@ -784,6 +795,7 @@ int gladLoadVulkanUserPtr( VkPhysicalDevice physical_device, GLADuserptrloadfunc
     glad_vk_load_VK_EXT_debug_utils(load, userptr);
     glad_vk_load_VK_EXT_extended_dynamic_state(load, userptr);
     glad_vk_load_VK_KHR_bind_memory2(load, userptr);
+    glad_vk_load_VK_KHR_buffer_device_address(load, userptr);
     glad_vk_load_VK_KHR_device_group(load, userptr);
     glad_vk_load_VK_KHR_dynamic_rendering(load, userptr);
     glad_vk_load_VK_KHR_get_memory_requirements2(load, userptr);
@@ -1016,10 +1028,12 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkFreeDescriptorSets",
     "vkFreeMemory",
     "vkGetBufferDeviceAddress",
+    "vkGetBufferDeviceAddressKHR",
     "vkGetBufferMemoryRequirements",
     "vkGetBufferMemoryRequirements2",
     "vkGetBufferMemoryRequirements2KHR",
     "vkGetBufferOpaqueCaptureAddress",
+    "vkGetBufferOpaqueCaptureAddressKHR",
     "vkGetCalibratedTimestampsEXT",
     "vkGetDescriptorSetLayoutSupport",
     "vkGetDeviceGroupPeerMemoryFeatures",
@@ -1028,6 +1042,7 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkGetDeviceGroupSurfacePresentModesKHR",
     "vkGetDeviceMemoryCommitment",
     "vkGetDeviceMemoryOpaqueCaptureAddress",
+    "vkGetDeviceMemoryOpaqueCaptureAddressKHR",
     "vkGetDeviceProcAddr",
     "vkGetDeviceQueue",
     "vkGetDeviceQueue2",
