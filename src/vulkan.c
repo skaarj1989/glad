@@ -36,7 +36,6 @@ int GLAD_VK_KHR_get_physical_device_properties2 = 0;
 int GLAD_VK_KHR_push_descriptor = 0;
 int GLAD_VK_KHR_surface = 0;
 int GLAD_VK_KHR_swapchain = 0;
-int GLAD_VK_KHR_synchronization2 = 0;
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 int GLAD_VK_KHR_win32_surface = 0;
 
@@ -96,12 +95,10 @@ PFN_vkCmdInsertDebugUtilsLabelEXT glad_vkCmdInsertDebugUtilsLabelEXT = NULL;
 PFN_vkCmdNextSubpass glad_vkCmdNextSubpass = NULL;
 PFN_vkCmdNextSubpass2 glad_vkCmdNextSubpass2 = NULL;
 PFN_vkCmdPipelineBarrier glad_vkCmdPipelineBarrier = NULL;
-PFN_vkCmdPipelineBarrier2KHR glad_vkCmdPipelineBarrier2KHR = NULL;
 PFN_vkCmdPushConstants glad_vkCmdPushConstants = NULL;
 PFN_vkCmdPushDescriptorSetKHR glad_vkCmdPushDescriptorSetKHR = NULL;
 PFN_vkCmdPushDescriptorSetWithTemplateKHR glad_vkCmdPushDescriptorSetWithTemplateKHR = NULL;
 PFN_vkCmdResetEvent glad_vkCmdResetEvent = NULL;
-PFN_vkCmdResetEvent2KHR glad_vkCmdResetEvent2KHR = NULL;
 PFN_vkCmdResetQueryPool glad_vkCmdResetQueryPool = NULL;
 PFN_vkCmdResolveImage glad_vkCmdResolveImage = NULL;
 PFN_vkCmdSetBlendConstants glad_vkCmdSetBlendConstants = NULL;
@@ -115,7 +112,6 @@ PFN_vkCmdSetDepthWriteEnableEXT glad_vkCmdSetDepthWriteEnableEXT = NULL;
 PFN_vkCmdSetDeviceMask glad_vkCmdSetDeviceMask = NULL;
 PFN_vkCmdSetDeviceMaskKHR glad_vkCmdSetDeviceMaskKHR = NULL;
 PFN_vkCmdSetEvent glad_vkCmdSetEvent = NULL;
-PFN_vkCmdSetEvent2KHR glad_vkCmdSetEvent2KHR = NULL;
 PFN_vkCmdSetFrontFaceEXT glad_vkCmdSetFrontFaceEXT = NULL;
 PFN_vkCmdSetLineWidth glad_vkCmdSetLineWidth = NULL;
 PFN_vkCmdSetPrimitiveTopologyEXT glad_vkCmdSetPrimitiveTopologyEXT = NULL;
@@ -130,10 +126,7 @@ PFN_vkCmdSetViewport glad_vkCmdSetViewport = NULL;
 PFN_vkCmdSetViewportWithCountEXT glad_vkCmdSetViewportWithCountEXT = NULL;
 PFN_vkCmdUpdateBuffer glad_vkCmdUpdateBuffer = NULL;
 PFN_vkCmdWaitEvents glad_vkCmdWaitEvents = NULL;
-PFN_vkCmdWaitEvents2KHR glad_vkCmdWaitEvents2KHR = NULL;
-PFN_vkCmdWriteBufferMarker2AMD glad_vkCmdWriteBufferMarker2AMD = NULL;
 PFN_vkCmdWriteTimestamp glad_vkCmdWriteTimestamp = NULL;
-PFN_vkCmdWriteTimestamp2KHR glad_vkCmdWriteTimestamp2KHR = NULL;
 PFN_vkCreateBuffer glad_vkCreateBuffer = NULL;
 PFN_vkCreateBufferView glad_vkCreateBufferView = NULL;
 PFN_vkCreateCommandPool glad_vkCreateCommandPool = NULL;
@@ -267,7 +260,6 @@ PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR glad_vkGetPhysicalDeviceWin32
 #endif
 PFN_vkGetPipelineCacheData glad_vkGetPipelineCacheData = NULL;
 PFN_vkGetQueryPoolResults glad_vkGetQueryPoolResults = NULL;
-PFN_vkGetQueueCheckpointData2NV glad_vkGetQueueCheckpointData2NV = NULL;
 PFN_vkGetRenderAreaGranularity glad_vkGetRenderAreaGranularity = NULL;
 PFN_vkGetSemaphoreCounterValue glad_vkGetSemaphoreCounterValue = NULL;
 PFN_vkGetSwapchainImagesKHR glad_vkGetSwapchainImagesKHR = NULL;
@@ -280,7 +272,6 @@ PFN_vkQueueEndDebugUtilsLabelEXT glad_vkQueueEndDebugUtilsLabelEXT = NULL;
 PFN_vkQueueInsertDebugUtilsLabelEXT glad_vkQueueInsertDebugUtilsLabelEXT = NULL;
 PFN_vkQueuePresentKHR glad_vkQueuePresentKHR = NULL;
 PFN_vkQueueSubmit glad_vkQueueSubmit = NULL;
-PFN_vkQueueSubmit2KHR glad_vkQueueSubmit2KHR = NULL;
 PFN_vkQueueWaitIdle glad_vkQueueWaitIdle = NULL;
 PFN_vkResetCommandBuffer glad_vkResetCommandBuffer = NULL;
 PFN_vkResetCommandPool glad_vkResetCommandPool = NULL;
@@ -589,17 +580,6 @@ static void glad_vk_load_VK_KHR_swapchain( GLADuserptrloadfunc load, void* userp
     glad_vkGetSwapchainImagesKHR = (PFN_vkGetSwapchainImagesKHR) load(userptr, "vkGetSwapchainImagesKHR");
     glad_vkQueuePresentKHR = (PFN_vkQueuePresentKHR) load(userptr, "vkQueuePresentKHR");
 }
-static void glad_vk_load_VK_KHR_synchronization2( GLADuserptrloadfunc load, void* userptr) {
-    if(!GLAD_VK_KHR_synchronization2) return;
-    glad_vkCmdPipelineBarrier2KHR = (PFN_vkCmdPipelineBarrier2KHR) load(userptr, "vkCmdPipelineBarrier2KHR");
-    glad_vkCmdResetEvent2KHR = (PFN_vkCmdResetEvent2KHR) load(userptr, "vkCmdResetEvent2KHR");
-    glad_vkCmdSetEvent2KHR = (PFN_vkCmdSetEvent2KHR) load(userptr, "vkCmdSetEvent2KHR");
-    glad_vkCmdWaitEvents2KHR = (PFN_vkCmdWaitEvents2KHR) load(userptr, "vkCmdWaitEvents2KHR");
-    glad_vkCmdWriteBufferMarker2AMD = (PFN_vkCmdWriteBufferMarker2AMD) load(userptr, "vkCmdWriteBufferMarker2AMD");
-    glad_vkCmdWriteTimestamp2KHR = (PFN_vkCmdWriteTimestamp2KHR) load(userptr, "vkCmdWriteTimestamp2KHR");
-    glad_vkGetQueueCheckpointData2NV = (PFN_vkGetQueueCheckpointData2NV) load(userptr, "vkGetQueueCheckpointData2NV");
-    glad_vkQueueSubmit2KHR = (PFN_vkQueueSubmit2KHR) load(userptr, "vkQueueSubmit2KHR");
-}
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 static void glad_vk_load_VK_KHR_win32_surface( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_VK_KHR_win32_surface) return;
@@ -751,7 +731,6 @@ static int glad_vk_find_extensions_vulkan( VkPhysicalDevice physical_device) {
     GLAD_VK_KHR_push_descriptor = glad_vk_has_extension("VK_KHR_push_descriptor", extension_count, extensions);
     GLAD_VK_KHR_surface = glad_vk_has_extension("VK_KHR_surface", extension_count, extensions);
     GLAD_VK_KHR_swapchain = glad_vk_has_extension("VK_KHR_swapchain", extension_count, extensions);
-    GLAD_VK_KHR_synchronization2 = glad_vk_has_extension("VK_KHR_synchronization2", extension_count, extensions);
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
     GLAD_VK_KHR_win32_surface = glad_vk_has_extension("VK_KHR_win32_surface", extension_count, extensions);
 
@@ -824,7 +803,6 @@ int gladLoadVulkanUserPtr( VkPhysicalDevice physical_device, GLADuserptrloadfunc
     glad_vk_load_VK_KHR_push_descriptor(load, userptr);
     glad_vk_load_VK_KHR_surface(load, userptr);
     glad_vk_load_VK_KHR_swapchain(load, userptr);
-    glad_vk_load_VK_KHR_synchronization2(load, userptr);
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
     glad_vk_load_VK_KHR_win32_surface(load, userptr);
 
@@ -966,12 +944,10 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkCmdNextSubpass",
     "vkCmdNextSubpass2",
     "vkCmdPipelineBarrier",
-    "vkCmdPipelineBarrier2KHR",
     "vkCmdPushConstants",
     "vkCmdPushDescriptorSetKHR",
     "vkCmdPushDescriptorSetWithTemplateKHR",
     "vkCmdResetEvent",
-    "vkCmdResetEvent2KHR",
     "vkCmdResetQueryPool",
     "vkCmdResolveImage",
     "vkCmdSetBlendConstants",
@@ -985,7 +961,6 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkCmdSetDeviceMask",
     "vkCmdSetDeviceMaskKHR",
     "vkCmdSetEvent",
-    "vkCmdSetEvent2KHR",
     "vkCmdSetFrontFaceEXT",
     "vkCmdSetLineWidth",
     "vkCmdSetPrimitiveTopologyEXT",
@@ -1000,10 +975,7 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkCmdSetViewportWithCountEXT",
     "vkCmdUpdateBuffer",
     "vkCmdWaitEvents",
-    "vkCmdWaitEvents2KHR",
-    "vkCmdWriteBufferMarker2AMD",
     "vkCmdWriteTimestamp",
-    "vkCmdWriteTimestamp2KHR",
     "vkCreateBuffer",
     "vkCreateBufferView",
     "vkCreateCommandPool",
@@ -1085,7 +1057,6 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkGetImageSubresourceLayout",
     "vkGetPipelineCacheData",
     "vkGetQueryPoolResults",
-    "vkGetQueueCheckpointData2NV",
     "vkGetRenderAreaGranularity",
     "vkGetSemaphoreCounterValue",
     "vkGetSwapchainImagesKHR",
@@ -1098,7 +1069,6 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkQueueInsertDebugUtilsLabelEXT",
     "vkQueuePresentKHR",
     "vkQueueSubmit",
-    "vkQueueSubmit2KHR",
     "vkQueueWaitIdle",
     "vkResetCommandBuffer",
     "vkResetCommandPool",
