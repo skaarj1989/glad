@@ -24,7 +24,7 @@ endif()
 
 find_package(Vulkan REQUIRED 1.2.170)
 
-add_library(glad src/vulkan.c)
+add_library(glad "src/vulkan.c")
 if(WIN32)
   target_compile_definitions(glad PUBLIC "VK_USE_PLATFORM_WIN32_KHR")
 endif()
@@ -33,7 +33,7 @@ target_include_directories(
               $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_link_libraries(glad PUBLIC Vulkan::Vulkan)
 
-add_library(glad::glad ALIAS glad)
+add_library(glad::vk ALIAS glad)
 
 include(GNUInstallDirs)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
