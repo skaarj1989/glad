@@ -20,6 +20,7 @@
 - VK_KHR_dynamic_rendering
 
 - VK_EXT_debug_utils
+- VK_EXT_robustness2
 - VK_EXT_calibrated_timestamps
 - VK_EXT_extended_dynamic_state
 - VK_EXT_descriptor_indexing

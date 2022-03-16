@@ -28,6 +28,7 @@ int GLAD_VK_EXT_calibrated_timestamps = 0;
 int GLAD_VK_EXT_debug_utils = 0;
 int GLAD_VK_EXT_descriptor_indexing = 0;
 int GLAD_VK_EXT_extended_dynamic_state = 0;
+int GLAD_VK_EXT_robustness2 = 0;
 int GLAD_VK_KHR_bind_memory2 = 0;
 int GLAD_VK_KHR_buffer_device_address = 0;
 int GLAD_VK_KHR_dedicated_allocation = 0;
@@ -821,6 +822,7 @@ static int glad_vk_find_extensions_vulkan( VkPhysicalDevice physical_device) {
     GLAD_VK_EXT_debug_utils = glad_vk_has_extension("VK_EXT_debug_utils", extension_count, extensions);
     GLAD_VK_EXT_descriptor_indexing = glad_vk_has_extension("VK_EXT_descriptor_indexing", extension_count, extensions);
     GLAD_VK_EXT_extended_dynamic_state = glad_vk_has_extension("VK_EXT_extended_dynamic_state", extension_count, extensions);
+    GLAD_VK_EXT_robustness2 = glad_vk_has_extension("VK_EXT_robustness2", extension_count, extensions);
     GLAD_VK_KHR_bind_memory2 = glad_vk_has_extension("VK_KHR_bind_memory2", extension_count, extensions);
     GLAD_VK_KHR_buffer_device_address = glad_vk_has_extension("VK_KHR_buffer_device_address", extension_count, extensions);
     GLAD_VK_KHR_dedicated_allocation = glad_vk_has_extension("VK_KHR_dedicated_allocation", extension_count, extensions);
