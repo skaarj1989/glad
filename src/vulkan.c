@@ -1,3 +1,6 @@
+/**
+ * SPDX-License-Identifier: (WTFPL OR CC0-1.0) AND Apache-2.0
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,6 +45,10 @@ int GLAD_VK_KHR_swapchain = 0;
 int GLAD_VK_KHR_synchronization2 = 0;
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 int GLAD_VK_KHR_win32_surface = 0;
+
+#endif
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+int GLAD_VK_KHR_xcb_surface = 0;
 
 #endif
 
@@ -196,6 +203,10 @@ PFN_vkCreateSwapchainKHR glad_vkCreateSwapchainKHR = NULL;
 PFN_vkCreateWin32SurfaceKHR glad_vkCreateWin32SurfaceKHR = NULL;
 
 #endif
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+PFN_vkCreateXcbSurfaceKHR glad_vkCreateXcbSurfaceKHR = NULL;
+
+#endif
 PFN_vkDestroyBuffer glad_vkDestroyBuffer = NULL;
 PFN_vkDestroyBufferView glad_vkDestroyBufferView = NULL;
 PFN_vkDestroyCommandPool glad_vkDestroyCommandPool = NULL;
@@ -300,6 +311,10 @@ PFN_vkGetPhysicalDeviceSurfaceSupportKHR glad_vkGetPhysicalDeviceSurfaceSupportK
 PFN_vkGetPhysicalDeviceToolProperties glad_vkGetPhysicalDeviceToolProperties = NULL;
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR glad_vkGetPhysicalDeviceWin32PresentationSupportKHR = NULL;
+
+#endif
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR glad_vkGetPhysicalDeviceXcbPresentationSupportKHR = NULL;
 
 #endif
 PFN_vkGetPipelineCacheData glad_vkGetPipelineCacheData = NULL;
@@ -688,6 +703,14 @@ static void glad_vk_load_VK_KHR_win32_surface( GLADuserptrloadfunc load, void* u
 }
 
 #endif
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+static void glad_vk_load_VK_KHR_xcb_surface( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_VK_KHR_xcb_surface) return;
+    glad_vkCreateXcbSurfaceKHR = (PFN_vkCreateXcbSurfaceKHR) load(userptr, "vkCreateXcbSurfaceKHR");
+    glad_vkGetPhysicalDeviceXcbPresentationSupportKHR = (PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR) load(userptr, "vkGetPhysicalDeviceXcbPresentationSupportKHR");
+}
+
+#endif
 
 
 
@@ -838,8 +861,12 @@ static int glad_vk_find_extensions_vulkan( VkPhysicalDevice physical_device) {
     GLAD_VK_KHR_win32_surface = glad_vk_has_extension("VK_KHR_win32_surface", extension_count, extensions);
 
 #endif
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+    GLAD_VK_KHR_xcb_surface = glad_vk_has_extension("VK_KHR_xcb_surface", extension_count, extensions);
 
-    (void) glad_vk_has_extension;
+#endif
+
+    GLAD_UNUSED(glad_vk_has_extension);
 
     glad_vk_free_extensions(extension_count, extensions);
 
@@ -911,6 +938,10 @@ int gladLoadVulkanUserPtr( VkPhysicalDevice physical_device, GLADuserptrloadfunc
     glad_vk_load_VK_KHR_synchronization2(load, userptr);
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
     glad_vk_load_VK_KHR_win32_surface(load, userptr);
+
+#endif
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+    glad_vk_load_VK_KHR_xcb_surface(load, userptr);
 
 #endif
 
@@ -1284,7 +1315,7 @@ static GLADapiproc glad_vulkan_get_proc(void *vuserptr, const char *name) {
 }
 
 
-static void* _vulkan_handle;
+static void* _glad_Vulkan_loader_handle = NULL;
 
 static void* glad_vulkan_dlopen_handle(void) {
     static const char *NAMES[] = {
@@ -1299,11 +1330,11 @@ static void* glad_vulkan_dlopen_handle(void) {
 #endif
     };
 
-    if (_vulkan_handle == NULL) {
-        _vulkan_handle = glad_get_dlopen_handle(NAMES, sizeof(NAMES) / sizeof(NAMES[0]));
+    if (_glad_Vulkan_loader_handle == NULL) {
+        _glad_Vulkan_loader_handle = glad_get_dlopen_handle(NAMES, sizeof(NAMES) / sizeof(NAMES[0]));
     }
 
-    return _vulkan_handle;
+    return _glad_Vulkan_loader_handle;
 }
 
 static struct _glad_vulkan_userptr glad_vulkan_build_userptr(void *handle, VkInstance instance, VkDevice device) {
@@ -1322,7 +1353,7 @@ int gladLoaderLoadVulkan( VkInstance instance, VkPhysicalDevice physical_device,
     int did_load = 0;
     struct _glad_vulkan_userptr userptr;
 
-    did_load = _vulkan_handle == NULL;
+    did_load = _glad_Vulkan_loader_handle == NULL;
     handle = glad_vulkan_dlopen_handle();
     if (handle != NULL) {
         userptr = glad_vulkan_build_userptr(handle, instance, device);
@@ -1342,9 +1373,9 @@ int gladLoaderLoadVulkan( VkInstance instance, VkPhysicalDevice physical_device,
 
 
 void gladLoaderUnloadVulkan(void) {
-    if (_vulkan_handle != NULL) {
-        glad_close_dlopen_handle(_vulkan_handle);
-        _vulkan_handle = NULL;
+    if (_glad_Vulkan_loader_handle != NULL) {
+        glad_close_dlopen_handle(_glad_Vulkan_loader_handle);
+        _glad_Vulkan_loader_handle = NULL;
     }
 }
 
