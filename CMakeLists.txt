@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.25)
 
 project(glad)
 if(PROJECT_BINARY_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -24,11 +24,16 @@ endif()
 
 find_package(OpenGL REQUIRED)
 
-add_library(glad src/gl.c $<IF:${WIN32}, src/wgl.c, src/glx.c >)
+add_library(glad "src/gl.c")
+if(WIN32)
+  target_sources(glad PRIVATE "src/wgl.c")
+elseif(LINUX)
+  target_sources(glad PRIVATE "src/glx.c")
+endif()
+
 target_include_directories(
-  glad
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+  glad PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+              $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_link_libraries(glad PUBLIC OpenGL::GL)
 
 add_library(glad::glad ALIAS glad)
