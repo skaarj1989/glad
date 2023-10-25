@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.25)
 
 project(glad)
 if(PROJECT_BINARY_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -22,12 +22,15 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   option(BUILD_SHARED_LIBS "Use shared libraries" OFF)
 endif()
 
-find_package(Vulkan REQUIRED 1.2.170)
+find_package(Vulkan REQUIRED)
 
 add_library(glad "src/vulkan.c")
 if(WIN32)
   target_compile_definitions(glad PUBLIC "VK_USE_PLATFORM_WIN32_KHR")
+elseif(LINUX)
+  target_compile_definitions(glad PUBLIC "VK_USE_PLATFORM_XCB_KHR")
 endif()
+
 target_include_directories(
   glad PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
               $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
