@@ -31,6 +31,8 @@ int GLAD_VK_EXT_calibrated_timestamps = 0;
 int GLAD_VK_EXT_debug_utils = 0;
 int GLAD_VK_EXT_descriptor_indexing = 0;
 int GLAD_VK_EXT_extended_dynamic_state = 0;
+int GLAD_VK_EXT_memory_priority = 0;
+int GLAD_VK_EXT_pageable_device_local_memory = 0;
 int GLAD_VK_EXT_robustness2 = 0;
 int GLAD_VK_KHR_bind_memory2 = 0;
 int GLAD_VK_KHR_buffer_device_address = 0;
@@ -344,6 +346,7 @@ PFN_vkResetFences glad_vkResetFences = NULL;
 PFN_vkResetQueryPool glad_vkResetQueryPool = NULL;
 PFN_vkSetDebugUtilsObjectNameEXT glad_vkSetDebugUtilsObjectNameEXT = NULL;
 PFN_vkSetDebugUtilsObjectTagEXT glad_vkSetDebugUtilsObjectTagEXT = NULL;
+PFN_vkSetDeviceMemoryPriorityEXT glad_vkSetDeviceMemoryPriorityEXT = NULL;
 PFN_vkSetEvent glad_vkSetEvent = NULL;
 PFN_vkSetPrivateData glad_vkSetPrivateData = NULL;
 PFN_vkSignalSemaphore glad_vkSignalSemaphore = NULL;
@@ -617,6 +620,10 @@ static void glad_vk_load_VK_EXT_extended_dynamic_state( GLADuserptrloadfunc load
     glad_vkCmdSetStencilTestEnableEXT = (PFN_vkCmdSetStencilTestEnableEXT) load(userptr, "vkCmdSetStencilTestEnableEXT");
     glad_vkCmdSetViewportWithCountEXT = (PFN_vkCmdSetViewportWithCountEXT) load(userptr, "vkCmdSetViewportWithCountEXT");
 }
+static void glad_vk_load_VK_EXT_pageable_device_local_memory( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_VK_EXT_pageable_device_local_memory) return;
+    glad_vkSetDeviceMemoryPriorityEXT = (PFN_vkSetDeviceMemoryPriorityEXT) load(userptr, "vkSetDeviceMemoryPriorityEXT");
+}
 static void glad_vk_load_VK_KHR_bind_memory2( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_VK_KHR_bind_memory2) return;
     glad_vkBindBufferMemory2KHR = (PFN_vkBindBufferMemory2KHR) load(userptr, "vkBindBufferMemory2KHR");
@@ -845,6 +852,8 @@ static int glad_vk_find_extensions_vulkan( VkPhysicalDevice physical_device) {
     GLAD_VK_EXT_debug_utils = glad_vk_has_extension("VK_EXT_debug_utils", extension_count, extensions);
     GLAD_VK_EXT_descriptor_indexing = glad_vk_has_extension("VK_EXT_descriptor_indexing", extension_count, extensions);
     GLAD_VK_EXT_extended_dynamic_state = glad_vk_has_extension("VK_EXT_extended_dynamic_state", extension_count, extensions);
+    GLAD_VK_EXT_memory_priority = glad_vk_has_extension("VK_EXT_memory_priority", extension_count, extensions);
+    GLAD_VK_EXT_pageable_device_local_memory = glad_vk_has_extension("VK_EXT_pageable_device_local_memory", extension_count, extensions);
     GLAD_VK_EXT_robustness2 = glad_vk_has_extension("VK_EXT_robustness2", extension_count, extensions);
     GLAD_VK_KHR_bind_memory2 = glad_vk_has_extension("VK_KHR_bind_memory2", extension_count, extensions);
     GLAD_VK_KHR_buffer_device_address = glad_vk_has_extension("VK_KHR_buffer_device_address", extension_count, extensions);
@@ -926,6 +935,7 @@ int gladLoadVulkanUserPtr( VkPhysicalDevice physical_device, GLADuserptrloadfunc
     glad_vk_load_VK_EXT_calibrated_timestamps(load, userptr);
     glad_vk_load_VK_EXT_debug_utils(load, userptr);
     glad_vk_load_VK_EXT_extended_dynamic_state(load, userptr);
+    glad_vk_load_VK_EXT_pageable_device_local_memory(load, userptr);
     glad_vk_load_VK_KHR_bind_memory2(load, userptr);
     glad_vk_load_VK_KHR_buffer_device_address(load, userptr);
     glad_vk_load_VK_KHR_device_group(load, userptr);
@@ -1258,6 +1268,7 @@ static const char* DEVICE_FUNCTIONS[] = {
     "vkResetQueryPool",
     "vkSetDebugUtilsObjectNameEXT",
     "vkSetDebugUtilsObjectTagEXT",
+    "vkSetDeviceMemoryPriorityEXT",
     "vkSetEvent",
     "vkSetPrivateData",
     "vkSignalSemaphore",

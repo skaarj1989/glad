@@ -25,3 +25,5 @@
 - VK_EXT_calibrated_timestamps
 - VK_EXT_extended_dynamic_state
 - VK_EXT_descriptor_indexing
+- VK_EXT_memory_priority
+- VK_EXT_pageable_device_local_memory
